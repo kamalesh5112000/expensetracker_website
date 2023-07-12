@@ -19,6 +19,10 @@ body{
 }
 
 .box-area {
-    box-shadow: 10px 10px lightblue;
+    box-shadow: 20px 20px lightblue;
     border-radius: 5px;
   }
+#page{
+    align-items: center;
+    text-align: center;
+}

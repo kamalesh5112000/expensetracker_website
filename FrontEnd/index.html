@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="./css/style.css">
     <title>Todo App</title>
 </head>
 <body>
@@ -16,16 +16,10 @@
 
         <div class="row border rounded-5 p-3 bg-white shadow box-area">
 
-
-            <div class="switch">
-                <div class="login"></div>
-                <div class="signup"></div>
-            </div>
-
-            <div class="outer">
+            <div class="outer align-items-center">
                 <form id="signupForm">
                     <div id="page">
-                        <label style=" color: black;">SignUp Form</label>
+                        <label style=" color: black; font-weight: bold;">SignUp</label>
                         <div class="element">
                             <input id="name" type="text" placeholder="Name" required>
                             
@@ -33,6 +27,7 @@
                         <br>
                         <div class="element">
                             <input id="email" type="text" placeholder="Email" required>
+                            <p id="emailcheck" style="background-color: red; color: white;"></p>
                             
                         </div>
                         <br>
@@ -42,7 +37,8 @@
                         </div>
                         <br>
                         <input type="submit" class="btn btn-dark" value="SignUp">
-                        <p style="color: rgb(12, 146, 255);">Already have an account click to Login</p>
+                        <br>
+                        <a href="./login.html">Already have an account click to Login</a>
                         
                     </div>
 
