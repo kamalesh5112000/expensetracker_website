@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+
+    <title>Expense Tracker</title>
+    <style>
+        body{
+            background-color: aqua;
+        }
+        header{
+            margin-top: 2%;
+        }
+    </style>
+    
+</head>
+<body>
+    <header>
+        <h1 class="text-center">Expense Tracker</h1>
+    </header>
+    
+    <div class="container">
+        <br>
+        <br>
+        <form id="addForm">
+            <div class="form-row">
+                
+                <div class="col-md-3">
+                    <label>Enter Expense Amount:</label>
+                    <input type="text" class="form-control " id="amount">
+                    
+                </div>
+                <div class="col-md-4">
+                    <label>Enter Expense Descripton:</label>
+                    <input type="text" class="form-control " id="desc">
+                </div>
+                <div class="col-md-3">
+                    <label>Enter Expense Categories:</label>
+                    <select name="categories" class="form-control" id="categories">
+                        <option value="movie">Movie</option>
+                        <option value="shopping">Shopping</option>
+                        <option value="dailyNeeds">Daily Needs</option>
+                        <option value="travel">Travel</option>
+                        <option value="food">Food</option>
+                    </select>
+                </div>
+                <div class="col-md-2 my-2">
+                    
+                    <br>
+                    <input type="submit" class="btn btn-dark" value="Add Expense">
+                    
+                </div>
+            
+
+            </div>
+        </form>
+    
+         <div class="item">
+            <div class="card">
+                <ul id="items" class="list-group">
+        
+                </ul>
+
+            </div>
+            
+         </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.4.0/axios.min.js"></script>
+  
+    <script src="expense.js"></script>
+</body>
+</html>
