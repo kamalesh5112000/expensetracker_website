@@ -1,19 +1,29 @@
 const { response } = require('express');
 const User = require('../model/user');
 const bcrypt=require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { use } = require('../routes/userRoutes');
+
+function generateAccessToken(id,nam){
+    return jwt.sign({ userId:id,name: nam},'secretkey')
+
+}
 
 async function emailValidate(email,password){
     let emailflag=false;
     let passwordflag=false;
+    let userobj=false;
     await User.findAll({where: {email}}).then(user=>{
         
         if(user.length>0){
             emailflag=user[0].email
             passwordflag = user[0].password
+            userobj=user
+            
         }
 
     })
-    return [emailflag,passwordflag]
+    return [emailflag,passwordflag,userobj]
 
 }
 
@@ -74,13 +84,13 @@ exports.addUser=async (req,res,next)=>{
 exports.loginUser=async (req,res,next)=>{
     const email = req.body.email;
     const password = req.body.password;
-    const [emailflag,passwordflag]=await emailValidate(email,password)
+    const [emailflag,passwordflag,userobj]=await emailValidate(email,password)
     console.log(emailflag,passwordflag)
     if(emailflag){
         bcrypt.compare(password,passwordflag,(err,response)=>{
             if(!err){
                 if(response){
-                    res.status(203).json({message:"Successfully Logged In"})
+                    res.status(203).json({message:"Successfully Logged In",token:generateAccessToken(userobj[0].id,userobj[0].name)})
                 }else{
                     res.status(201).json({message:"Password Incorrect"})
     

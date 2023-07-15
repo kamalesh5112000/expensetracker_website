@@ -5,8 +5,35 @@ var desc=document.getElementById('desc');
 var cat=document.getElementById('categories');
 var iid=0;
 var expense=[]
+var premiumbtn= document.getElementById('premiumbtn');
 
+premiumbtn.addEventListener('click',buyPremium);
 
+async function buyPremium(e){
+    const token = localStorage.getItem('token');
+    const res=await axios.get('http://localhost:5000/purchase/premium',{headers:{"Authorization":token}});
+    console.log(res)
+    var options={
+        "key":res.data.key_id,
+        "order_id":res.data.order_id,
+        "handler":async function(response){
+            await axios.post('http://localhost:5000/purchase/updatetransaction',{
+                order_id:options.order_id,
+                payment_id:response.razorpay_payment_id
+            },{headers:{"Authorization":token}})
+
+            alert('You are Premium User Now')
+        }
+    };
+    const rzpl = new Razorpay(options);
+    rzpl.open();
+    e.preventDefault();
+    rzpl.on('payment.failed',function(response){
+        console.log(response)
+        alert('something went worng')
+    })
+
+};
 
 form.addEventListener('submit',submitForm);
 
@@ -22,7 +49,9 @@ async function submitForm(e){
         description: desc.value,
         catecgory:cat.value
     }
-    const res = await axios.post('http://localhost:5000/expense',myobj)
+    const token = localStorage.getItem('token');
+    const res = await axios.post('http://localhost:5000/expense',myobj,{headers:{"Authorization":token}});
+    //const res = await axios.post('http://localhost:5000/expense',myobj)
     newitem.innerHTML='';
     display();
     
@@ -33,8 +62,8 @@ async function submitForm(e){
 
 }
 async function display(){
-   
-    const res = await axios.get('http://localhost:5000/expense');
+    const token = localStorage.getItem('token');
+    const res = await axios.get('http://localhost:5000/expense',{headers:{"Authorization":token}});
     
     if(res.data.length<=0){
         console.log("No data Present")
@@ -45,19 +74,10 @@ async function display(){
         }
 
     }
-    
-    // const localstorageObj = localStorage;
-    // const localstoragekeys = Object.keys(localstorageObj)
-    // console.log(localstoragekeys)
-    // for(var i=0;i<localstoragekeys.length;i++){
-    //     const key =localstoragekeys[i]
-    //     const userdetails=localstorageObj[key]
-    //     const userparse=JSON.parse(userdetails);
-    //     showData(userparse)
-    // }
 
 }
-display()
+display();
+
 function showData(obj){
     iid=obj.id
     var li=document.createElement('li');
@@ -107,7 +127,8 @@ function delitem(e){
             
             newitem.removeChild(li)
             console.log(itemaount,itemcat,itemdes,iid)
-            axios.delete(`http://localhost:5000/expense/${iid}`)
+            const token = localStorage.getItem('token');
+            axios.delete(`http://localhost:5000/expense/${iid}`,{headers:{"Authorization":token}})
             .then(()=>{
                 newitem.innerHTML='';
                 display();

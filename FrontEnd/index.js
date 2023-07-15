@@ -19,6 +19,7 @@ async function submitForm(e){
         emailcheck.innerHTML="Email Already Exits"
     }else{
         alert(res.data.message)
+        window.location.replace("./login.html");
     }
     // console.log(myobj)
     // const res = await axios.get('http://localhost:5000/')

@@ -1,6 +1,12 @@
 const Expense = require('../model/expense');
+const { use } = require('../routes/userRoutes');
+const jwt = require('jsonwebtoken');
+
 exports.getExpense= (req, res, next) => {
-    Expense.findAll()
+    //console.log(req.headers.authorization)
+    
+    console.log("From the Expences",req.user.email)
+    Expense.findAll({where: {userId:req.user.id}})
     .then(exp=>{
       res.json(exp)
       // res.render('shop/product-list', {
@@ -19,11 +25,13 @@ exports.getExpense= (req, res, next) => {
     const description = req.body.description;
     const catecgory = req.body.catecgory;
     console.log(amount,description,catecgory);
+    console.log(req.user.id)
     
     Expense.create({
         amount:amount,
         description:description,
-        catecgory:catecgory
+        catecgory:catecgory,
+        userId:req.user.id
 
     }).then(result=>{
         res.json(result)
@@ -32,13 +40,11 @@ exports.getExpense= (req, res, next) => {
   }
 
   exports.expensedelete=(req,res,next)=>{
-    const userid=req.params.ID;
-    console.log(userid)
+    const expid=req.params.ID;
+    console.log(expid)
     
-    Expense.findByPk(userid)
-    .then(exp=>{
-        return exp.destroy();
-    }).then(result=>{
+    Expense.destroy({where: {id:expid,userId:req.user.id}})
+    .then(result=>{
         res.json(result)
         console.log('Expense Deleted')
         
