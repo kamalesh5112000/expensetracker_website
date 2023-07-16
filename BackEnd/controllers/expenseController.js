@@ -4,11 +4,13 @@ const jwt = require('jsonwebtoken');
 
 exports.getExpense= (req, res, next) => {
     //console.log(req.headers.authorization)
-    
+    const userdata=req.user.isPremium
     console.log("From the Expences",req.user.email)
     Expense.findAll({where: {userId:req.user.id}})
-    .then(exp=>{
-      res.json(exp)
+    .then(data=>{
+        
+        
+      res.json({data,userdata})
       // res.render('shop/product-list', {
       //   prods: products,
       //   pageTitle: 'All Products',

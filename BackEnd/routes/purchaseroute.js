@@ -6,5 +6,5 @@ const purchaseController = require('../controllers/purchase');
 const router = express.Router();
 
 router.get('/purchase/premium',userauthenticate.authenticate,purchaseController.purchasePremium)
-router.post('/purchase/updatetransaction',userauthenticate.authenticate,purchaseController.purchasePremium)
+router.post('/purchase/updatetransaction',userauthenticate.authenticate,purchaseController.updateTransactionStatus)
 module.exports = router;

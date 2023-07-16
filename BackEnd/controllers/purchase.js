@@ -7,12 +7,16 @@ exports.purchasePremium=async (req,res)=>{
     try{
 
         var rzp=new Razorpay({
-            key_id:'rzp_test_bBVW3zYv2rRWif',
-            key_secret:'W0dWU3qlR5p4r5uAXy8i54a5'
+            key_id:'rzp_test_1J6va1Zfs8T7ra',
+            key_secret:'KTl8K857rcDS78lnBVrV8A9h'
         })
-        const amount = 255;
+        var options = {
+            amount: 2000,  // amount in the smallest currency unit
+            currency: "INR",
+            receipt: "order_rcptid_11"
+          };
 
-        rzp.orders.create({amount,currency:"INR"},(err,order)=>{
+        rzp.orders.create(options,(err,order)=>{
             if(err){
                 console.log(err)
                 throw new Error(JSON.stringify(err))
@@ -25,5 +29,24 @@ exports.purchasePremium=async (req,res)=>{
     }catch(err){
         console.log(err)
         return res.status(202).json("Unsuccefull")
+    }
+}
+exports.updateTransactionStatus=async (req,res)=>{
+    try{
+        const {payment_id,order_id}=req.body;
+        console.log(req.body);
+        console.log(payment_id,order_id)
+        const order=await Order.findOne({where:{orderid:order_id}})
+        const promise1= order.update({paymentid: payment_id ,status:'SUCCESSFUL'})
+        const promise2= req.user.update({isPremium:true})
+        Promise.all([promise1,promise2]).then(()=>{
+            return res.status(202).json({sucess:true,message:"Transaction Successfull"})
+        }).catch(err=>console.log(err))
+            
+            
+
+    }catch(err){
+        console.log(err)
+        return res.status(402).json({sucess:true,message:"Something went Wrong"})
     }
 }

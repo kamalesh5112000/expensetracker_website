@@ -6,6 +6,7 @@ var cat=document.getElementById('categories');
 var iid=0;
 var expense=[]
 var premiumbtn= document.getElementById('premiumbtn');
+var premiumtxt=document.getElementById('premiumtxt');
 
 premiumbtn.addEventListener('click',buyPremium);
 
@@ -15,7 +16,7 @@ async function buyPremium(e){
     console.log(res)
     var options={
         "key":res.data.key_id,
-        "order_id":res.data.order_id,
+        "order_id":res.data.order.id,
         "handler":async function(response){
             await axios.post('http://localhost:5000/purchase/updatetransaction',{
                 order_id:options.order_id,
@@ -64,13 +65,21 @@ async function submitForm(e){
 async function display(){
     const token = localStorage.getItem('token');
     const res = await axios.get('http://localhost:5000/expense',{headers:{"Authorization":token}});
-    
-    if(res.data.length<=0){
+    console.log(res.data)
+    if(res.data.userdata){
+        premiumbtn.style.display="none";
+        premiumtxt.innerText="You are a Premium User Now"
+        
+    }
+    if(res.data.data.length<=0){
         console.log("No data Present")
         newitem.innerHTML='No data Present';
     }else{
-        for(var i=0;i<res.data.length;i++){
-            showData(res.data[i])
+        
+        for(var i=0;i<res.data.data.length;i++){
+            showData(res.data.data[i])
+            console.log("data",i,res.data.data[i])
+            
         }
 
     }
