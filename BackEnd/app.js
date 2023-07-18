@@ -14,6 +14,7 @@ const app = express();
 const userRoutes=require('./routes/userRoutes');
 const expenseRoute=require('./routes/expenseroute');
 const purchaseRoute=require('./routes/purchaseroute');
+const featureRoute=require('./routes/premiumFeatureroute');
 
 app.use(bodyParser.json({ extended: false }));
 app.use(cors());
@@ -21,6 +22,7 @@ app.use(cors());
 app.use(userRoutes);
 app.use(expenseRoute);
 app.use(purchaseRoute);
+app.use(featureRoute);
 
 user.hasMany(expense);
 expense.belongsTo(user)

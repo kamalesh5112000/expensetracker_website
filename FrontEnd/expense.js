@@ -7,6 +7,9 @@ var iid=0;
 var expense=[]
 var premiumbtn= document.getElementById('premiumbtn');
 var premiumtxt=document.getElementById('premiumtxt');
+var leaderbtn=document.getElementById('leaderboard');
+var leaderitems=document.getElementById('leaderitems');
+
 
 premiumbtn.addEventListener('click',buyPremium);
 
@@ -70,6 +73,9 @@ async function display(){
         premiumbtn.style.display="none";
         premiumtxt.innerText="You are a Premium User Now"
         
+    }else{
+        leaderbtn.disabled = true;
+
     }
     if(res.data.data.length<=0){
         console.log("No data Present")
@@ -115,6 +121,7 @@ function showData(obj){
     li.appendChild(id)
     li.appendChild(del)
     newitem.appendChild(li);
+    // leaderboarditems.appendChild(li)
     
     
     amount.value=""
@@ -122,7 +129,54 @@ function showData(obj){
     cat.value=""
 }
 
+leaderbtn.addEventListener('click',showleaderboard);
 
+async function showleaderboard(e){
+    //if(!document.getElementById('leaderboarditems')){
+        var ulleader=document.createElement('ul');
+        ulleader.id="leaderboarditems";
+        ulleader.className="list-group-item"
+        leaderitems.appendChild(ulleader)
+        const token = localStorage.getItem('token');
+        const res = await axios.get('http://localhost:5000/showLeaderBoard',{headers:{"Authorization":token}});
+        console.log(res)
+        // for(var i=0;i<res.data.leaderboard.length;i++){
+        //     displayleader(res.data.leaderboard[i],res.data.userId)
+        //     //console.log("data",i,res.data.leaderboard[i])
+            
+        // }
+        //console.log("leader Board",res)
+    //}
+
+    
+
+    
+    
+    
+
+}
+function displayleader(obj,userId){
+    var leaderboarditems=document.getElementById('leaderboarditems');
+    iid=obj.id
+    var li=document.createElement('ul');
+    if(obj.id===userId){
+        li.className='list-group-item active';
+
+    }else{
+        li.className='list-group-item ';
+    }
+    
+    li.appendChild(document.createTextNode("Name: "));
+    li.appendChild(document.createTextNode(obj.name));
+    li.appendChild(document.createTextNode(" - Total Amount :"));
+    li.appendChild(document.createTextNode(obj.totale));
+
+    
+    leaderboarditems.appendChild(li)
+    
+
+
+}
 
 function delitem(e){
     var li=e.target.parentElement;

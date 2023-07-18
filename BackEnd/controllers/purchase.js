@@ -7,8 +7,8 @@ exports.purchasePremium=async (req,res)=>{
     try{
 
         var rzp=new Razorpay({
-            key_id:'rzp_test_1J6va1Zfs8T7ra',
-            key_secret:'KTl8K857rcDS78lnBVrV8A9h'
+            key_id:'rzp_test_MzT1qkn9tGL3ma',
+            key_secret:'3kdzTOVmfK3yBbZTyunDQfKz'
         })
         var options = {
             amount: 2000,  // amount in the smallest currency unit
