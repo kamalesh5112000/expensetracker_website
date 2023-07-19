@@ -18,7 +18,8 @@ const Product = sequelize.define('user',{
     type:Sequelize.STRING,
     allowNull:false
   },
-  isPremium:Sequelize.BOOLEAN
+  isPremium:Sequelize.BOOLEAN,
+  totalcost:Sequelize.INTEGER
 });
 
 module.exports=Product;

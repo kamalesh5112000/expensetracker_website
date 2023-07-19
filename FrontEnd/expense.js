@@ -140,11 +140,13 @@ async function showleaderboard(e){
         const token = localStorage.getItem('token');
         const res = await axios.get('http://localhost:5000/showLeaderBoard',{headers:{"Authorization":token}});
         console.log(res)
-        // for(var i=0;i<res.data.leaderboard.length;i++){
-        //     displayleader(res.data.leaderboard[i],res.data.userId)
-        //     //console.log("data",i,res.data.leaderboard[i])
+        for(var i=0;i<res.data.leaderboard.length;i++){
+            if(!res.data.leaderboard[i].total_cost){
+                res.data.leaderboard[i].total_cost=0
+            }
+            displayleader(res.data.leaderboard[i],res.data.userId)
             
-        // }
+        }
         //console.log("leader Board",res)
     //}
 
@@ -169,7 +171,7 @@ function displayleader(obj,userId){
     li.appendChild(document.createTextNode("Name: "));
     li.appendChild(document.createTextNode(obj.name));
     li.appendChild(document.createTextNode(" - Total Amount :"));
-    li.appendChild(document.createTextNode(obj.totale));
+    li.appendChild(document.createTextNode(obj.total_cost));
 
     
     leaderboarditems.appendChild(li)

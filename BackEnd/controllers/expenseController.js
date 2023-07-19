@@ -1,6 +1,8 @@
 const Expense = require('../model/expense');
 const { use } = require('../routes/userRoutes');
 const jwt = require('jsonwebtoken');
+const User = require('../model/user');
+
 
 exports.getExpense= (req, res, next) => {
     //console.log(req.headers.authorization)
@@ -21,13 +23,25 @@ exports.getExpense= (req, res, next) => {
     });
   };
 
-  exports.addExpense=(req,res,next)=>{
+  exports.addExpense=async (req,res,next)=>{
     console.log(req.body)
     const amount = req.body.amount;
     const description = req.body.description;
     const catecgory = req.body.catecgory;
     console.log(amount,description,catecgory);
     console.log(req.user.id)
+    let updateduser=await User.findAll({
+        where:{id:req.user.id},
+        attributes:['totalcost']
+
+    })
+    console.log(updateduser[0].totalcost)
+    await User.findByPk(req.user.id).then(user=>{
+        user.totalcost=Number(updateduser[0].totalcost)+Number(amount)
+        return user.save()
+    })
+    
+    
     
     Expense.create({
         amount:amount,
@@ -41,18 +55,31 @@ exports.getExpense= (req, res, next) => {
     }).catch(err=>console.log(err));
   }
 
-  exports.expensedelete=(req,res,next)=>{
+  exports.expensedelete=async(req,res,next)=>{
     const expid=req.params.ID;
     console.log(expid)
+    let expamount=0;
     
-    Expense.destroy({where: {id:expid,userId:req.user.id}})
+    await Expense.findByPk(expid)
     .then(result=>{
         res.json(result)
+        console.log(result.amount)
+        expamount=result.amount
+
+        return result.destroy();
         console.log('Expense Deleted')
         
 
+    }).catch(err=>console.log(err));
+    let updateduser=await User.findAll({
+        where:{id:req.user.id},
+        attributes:['totalcost']
+
     })
-    .catch(err=>{
-        console.log(err)
-    });
+    console.log(updateduser[0].totalcost)
+    await User.findByPk(req.user.id).then(user=>{
+        user.totalcost=Number(updateduser[0].totalcost)-Number(expamount)
+        return user.save()
+    })
+
   }

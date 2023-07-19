@@ -24,20 +24,6 @@ exports.getleaderBoard=async(req,res,next)=>{
     }
     
     
-    // .then(user=>{
-    //     user.forEach(user => {
-            
-    //         console.log(user.name,user.id)
-    //         Expense.findAll({where: {userId:user.id}}).then(expense=>{
-    //             console.log(expense[0].description,expense[0].amount)
-    //             totalexpense=totalexpense+expense[0].amount
-
-    //         })
-    //         leaderboard.push({name:user.name,totale:totalexpense})
-    //     }).then(()=>{
-    //         console.log("Leader Board",leaderboard)
-    //         res.json(leaderboard);
-    //     })
-    // })
+    
     
 }
