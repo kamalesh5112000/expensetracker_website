@@ -5,7 +5,6 @@ const User = require('../model/user');
 
 
 exports.getExpense= (req, res, next) => {
-    //console.log(req.headers.authorization)
     const userdata=req.user.isPremium
     console.log("From the Expences",req.user.email)
     Expense.findAll({where: {userId:req.user.id}})
@@ -13,18 +12,14 @@ exports.getExpense= (req, res, next) => {
         
         
       res.json({data,userdata})
-      // res.render('shop/product-list', {
-      //   prods: products,
-      //   pageTitle: 'All Products',
-      //   path: '/products'
-      // });
+
     }).catch(err=>{
       console.log(err)
     });
   };
 
   exports.addExpense=async (req,res,next)=>{
-    console.log(req.body)
+
     const amount = req.body.amount;
     const description = req.body.description;
     const catecgory = req.body.catecgory;

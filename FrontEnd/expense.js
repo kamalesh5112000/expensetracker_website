@@ -5,15 +5,14 @@ var desc=document.getElementById('desc');
 var cat=document.getElementById('categories');
 var iid=0;
 var expense=[]
-var premiumbtn= document.getElementById('premiumbtn');
+var premiumbtn =document.getElementById('rzp-button1');
 var premiumtxt=document.getElementById('premiumtxt');
 var leaderbtn=document.getElementById('leaderboard');
 var leaderitems=document.getElementById('leaderitems');
 
 
-premiumbtn.addEventListener('click',buyPremium);
-
-async function buyPremium(e){
+document.getElementById('rzp-button1').onclick=async function buyPremium(e){
+    e.preventDefault();
     const token = localStorage.getItem('token');
     const res=await axios.get('http://localhost:5000/purchase/premium',{headers:{"Authorization":token}});
     console.log(res)
@@ -27,6 +26,7 @@ async function buyPremium(e){
             },{headers:{"Authorization":token}})
 
             alert('You are Premium User Now')
+            display();
         }
     };
     const rzpl = new Razorpay(options);
@@ -58,6 +58,9 @@ async function submitForm(e){
     //const res = await axios.post('http://localhost:5000/expense',myobj)
     newitem.innerHTML='';
     display();
+    if(document.getElementById('leaderboarditems')){
+        showLeaderBoardapi();
+    }
     
     
 
@@ -131,13 +134,22 @@ function showData(obj){
 
 leaderbtn.addEventListener('click',showleaderboard);
 
-async function showleaderboard(e){
-    //if(!document.getElementById('leaderboarditems')){
+function showleaderboard(e){
+    if(!document.getElementById('leaderboarditems')){
         var ulleader=document.createElement('ul');
         ulleader.id="leaderboarditems";
         ulleader.className="list-group-item"
         leaderitems.appendChild(ulleader)
-        const token = localStorage.getItem('token');
+        showLeaderBoardapi();
+        
+    }
+}
+async function showLeaderBoardapi(){
+
+    var ulleader=document.getElementById('leaderboarditems');
+    ulleader.innerText="";
+
+    const token = localStorage.getItem('token');
         const res = await axios.get('http://localhost:5000/showLeaderBoard',{headers:{"Authorization":token}});
         console.log(res)
         for(var i=0;i<res.data.leaderboard.length;i++){
@@ -147,14 +159,7 @@ async function showleaderboard(e){
             displayleader(res.data.leaderboard[i],res.data.userId)
             
         }
-        //console.log("leader Board",res)
-    //}
-
-    
-
-    
-    
-    
+        console.log("leader Board",res)
 
 }
 function displayleader(obj,userId){
@@ -171,7 +176,7 @@ function displayleader(obj,userId){
     li.appendChild(document.createTextNode("Name: "));
     li.appendChild(document.createTextNode(obj.name));
     li.appendChild(document.createTextNode(" - Total Amount :"));
-    li.appendChild(document.createTextNode(obj.total_cost));
+    li.appendChild(document.createTextNode(obj.totalcost));
 
     
     leaderboarditems.appendChild(li)
