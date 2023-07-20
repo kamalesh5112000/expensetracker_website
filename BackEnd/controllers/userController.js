@@ -4,6 +4,15 @@ const bcrypt=require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { use } = require('../routes/userRoutes');
 
+
+
+const Sib=require('sib-api-v3-sdk');
+require('dotenv').config()
+const client = Sib.ApiClient.instance
+const apiKey= client.authentications['api-key']
+apiKey.apiKey=process.env.API_KEY
+
+
 function generateAccessToken(id,nam){
     return jwt.sign({ userId:id,name: nam},'secretkey')
 
@@ -117,3 +126,27 @@ exports.getUsers = (req, res, next) => {
       console.log(err)
     });
 };
+
+exports.forgotpassword=async(req,res,next)=>{
+    const email = req.body.email;
+    console.log(email)
+    console.log("Api Key   ",apiKey.apiKey)
+    const user=await User.findAll({where: {email}})
+    
+    const tranEmailApi=new Sib.TransactionalEmailsApi()
+
+    const sender={
+        email:'kamalesh5112000@pec.edu'
+    }
+
+    const receivers=[{
+        email:email
+    }]
+    tranEmailApi.sendTransacEmail({
+        sender,
+        to:receivers,
+        subject: 'Forgot Password',
+        textContent:` Your Password for the Email : ${email} is ${user[0].password}`
+    }).then(console.log).catch(console.log)
+
+}

@@ -31,27 +31,6 @@ async function submitForm(e){
         localStorage.setItem('token',res.data.token)
         window.location.replace("./expense.html");
     }
-    // if (res.data.length==0){
-    //     emailcheck.innerHTML="No Such Email Exits"
-    // }else{
-    //     for(var i=0;i<res.data.length;i++){
-    //         if(res.data[i].email==email.value){
-    //             flag=true
-    //             if(res.data[i].password==password.value){
-    //                 alert("Successfully Logged In");
-    //                 break;
-    //             }else{
-    //                 passwordcheck.innerHTML="Password is Incorrect"
-    //             }
-    //         }
-    //     }
-    // }
-    // if(flag==false){
-    //     emailcheck.innerHTML="No Such Email Exits"
-    // }else{
-    //     emailcheck.innerHTML=""
-    // }
-
-    //const res = await axios.post('http://localhost:5000/',myobj)
+    
 
 }
