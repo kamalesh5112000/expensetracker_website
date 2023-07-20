@@ -1,18 +1,18 @@
 const { response } = require('express');
 const User = require('../model/user');
+const ForgotPassword = require('../model/forgotPasswordRequest');
 const bcrypt=require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { use } = require('../routes/userRoutes');
-
+const { v4: uuidv4 } = require('uuid');
+const sequelize=require('../database/database');
 
 
 const Sib=require('sib-api-v3-sdk');
 require('dotenv').config()
 const client = Sib.ApiClient.instance
 const apiKey= client.authentications['api-key']
-apiKey.apiKey=process.env.API_KEY
-
-
+apiKey.apiKey='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'
 function generateAccessToken(id,nam){
     return jwt.sign({ userId:id,name: nam},'secretkey')
 
@@ -131,8 +131,10 @@ exports.forgotpassword=async(req,res,next)=>{
     const email = req.body.email;
     console.log(email)
     console.log("Api Key   ",apiKey.apiKey)
+    const uid=uuidv4();
     const user=await User.findAll({where: {email}})
-    
+    console.log(`http://localhost:5000/password/forgotpassword/${uuidv4()}`)
+    await ForgotPassword.create({ id:uid, isactive:true, userId:user[0].id})
     const tranEmailApi=new Sib.TransactionalEmailsApi()
 
     const sender={
@@ -141,12 +143,25 @@ exports.forgotpassword=async(req,res,next)=>{
 
     const receivers=[{
         email:email
+        
     }]
     tranEmailApi.sendTransacEmail({
         sender,
         to:receivers,
         subject: 'Forgot Password',
-        textContent:` Your Password for the Email : ${email} is ${user[0].password}`
-    }).then(console.log).catch(console.log)
+        textContent:`Click the Below link to Reset the Password
+        http://localhost:5000/password/resetpassword/${uid}`
+    }).then(result=>{
+        res.json(result)
+        console.log(result)
+    }).catch(err=>{
+        console.log(err)
+        res.json(err)
+        
 
+    })
+
+}
+exports.resetPassword=async(req,res,next){
+    
 }

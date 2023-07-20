@@ -8,6 +8,7 @@ const sequelize=require('./database/database');
 const user = require('./model/user');
 const expense=require('./model/expense');
 const order=require('./model/orders');
+const forgotpassword=require('./model/forgotPasswordRequest');
 
 const app = express();
 
@@ -26,6 +27,9 @@ app.use(featureRoute);
 
 user.hasMany(expense);
 expense.belongsTo(user)
+
+user.hasMany(forgotpassword);
+forgotpassword.belongsTo(user)
 
 user.hasMany(order);
 order.belongsTo(user)

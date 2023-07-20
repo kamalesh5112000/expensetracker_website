@@ -75,6 +75,7 @@ async function display(){
     if(res.data.userdata){
         premiumbtn.style.display="none";
         premiumtxt.innerText="You are a Premium User Now"
+        leaderbtn.disabled = false;
         
     }else{
         leaderbtn.disabled = true;
