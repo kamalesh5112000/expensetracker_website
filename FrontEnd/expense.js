@@ -9,6 +9,7 @@ var premiumbtn =document.getElementById('rzp-button1');
 var premiumtxt=document.getElementById('premiumtxt');
 var leaderbtn=document.getElementById('leaderboard');
 var leaderitems=document.getElementById('leaderitems');
+var showanalysis=document.getElementById('showanalysis')
 
 
 document.getElementById('rzp-button1').onclick=async function buyPremium(e){
@@ -76,9 +77,11 @@ async function display(){
         premiumbtn.style.display="none";
         premiumtxt.innerText="You are a Premium User Now"
         leaderbtn.disabled = false;
+        showanalysis.disabled=false;
         
     }else{
         leaderbtn.disabled = true;
+        showanalysis.disabled=true;
 
     }
     if(res.data.data.length<=0){
