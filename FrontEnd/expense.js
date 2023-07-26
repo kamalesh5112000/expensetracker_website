@@ -10,6 +10,8 @@ var premiumtxt=document.getElementById('premiumtxt');
 var leaderbtn=document.getElementById('leaderboard');
 var leaderitems=document.getElementById('leaderitems');
 var showanalysis=document.getElementById('showanalysis')
+var paginationarea=document.getElementById('paginationarea');
+
 
 
 document.getElementById('rzp-button1').onclick=async function buyPremium(e){
@@ -70,8 +72,10 @@ async function submitForm(e){
 
 }
 async function display(){
+    const page =1;
+
     const token = localStorage.getItem('token');
-    const res = await axios.get('http://localhost:5000/expense',{headers:{"Authorization":token}});
+    const res = await axios.get(`http://localhost:5000/expense?page=${page}`,{headers:{"Authorization":token}});
     console.log(res.data)
     if(res.data.userdata){
         premiumbtn.style.display="none";
@@ -81,7 +85,7 @@ async function display(){
         
     }else{
         leaderbtn.disabled = true;
-        showanalysis.disabled=true;
+        //showanalysis.disabled=true;
 
     }
     if(res.data.data.length<=0){
@@ -223,4 +227,11 @@ function delitem(e){
             
         }
     }
+}
+
+showanalysis.addEventListener('click',showAnalysisData);
+
+function showAnalysisData(e){
+    e.preventDefault();
+    window.location.href="./analysis.html";
 }

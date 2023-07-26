@@ -1,14 +1,14 @@
 const Expense = require('../model/expense');
-const { use } = require('../routes/userRoutes');
 const jwt = require('jsonwebtoken');
 const User = require('../model/user');
 const sequelize=require('../database/database');
 
 
 exports.getExpense= (req, res, next) => {
+    const page=+req.query.page;
+    console.log("Page Number :",page)
     
     const userdata=req.user.isPremium
-    console.log("From the Expences",req.user.email)
     Expense.findAll({where: {userId:req.user.id}})
     .then(data=>{
         
@@ -56,6 +56,7 @@ exports.getExpense= (req, res, next) => {
   }
 
   exports.expensedelete=async(req,res,next)=>{
+    
     const expid=req.params.ID;
     console.log(expid)
     const t=await sequelize.transaction();

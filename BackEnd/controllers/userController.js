@@ -3,7 +3,6 @@ const User = require('../model/user');
 const ForgotPassword = require('../model/forgotPasswordRequest');
 const bcrypt=require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { use } = require('../routes/userRoutes');
 const { v4: uuidv4 } = require('uuid');
 const sequelize=require('../database/database');
 
