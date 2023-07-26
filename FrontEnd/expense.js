@@ -92,9 +92,10 @@ async function display(){
         console.log("No data Present")
         newitem.innerHTML='No data Present';
     }else{
-        
+        showpagination(res.data.pag)
         for(var i=0;i<res.data.data.length;i++){
             showData(res.data.data[i])
+
             console.log("data",i,res.data.data[i])
             
         }
@@ -104,7 +105,47 @@ async function display(){
 }
 display();
 
+function showpagination(obj){
+    paginationarea.innerHTML=""
+    console.log(obj)
+    if(obj.hasprevpage){
+        const prevbtn=document.createElement('button');
+        prevbtn.style.marginRight='5px'
+        prevbtn.innerHTML=obj.prevpage
+        prevbtn.addEventListener('click',()=>getexpense(obj.prevpage))
+        paginationarea.appendChild(prevbtn)
+    }
+    const curbtn=document.createElement('button');
+    curbtn.style.marginRight='5px'
+    curbtn.style.backgroundColor='blue'
+    
+    curbtn.innerHTML=obj.currpage
+    curbtn.addEventListener('click',()=>getexpense(obj.currpage))
+    paginationarea.appendChild(curbtn)
+    if(obj.hasnextpage){
+        const nextbtn=document.createElement('button');
+        nextbtn.style.marginRight='5px'
+        nextbtn.innerHTML=obj.nextpage
+        nextbtn.addEventListener('click',()=>getexpense(obj.nextpage))
+        paginationarea.appendChild(nextbtn)
+    }
+    
+}
+async function getexpense(page){
+    const token = localStorage.getItem('token');
+    const res = await axios.get(`http://localhost:5000/expense?page=${page}`,{headers:{"Authorization":token}});
+    showpagination(res.data.pag)
+    newitem.innerHTML=""
+    for(var i=0;i<res.data.data.length;i++){
+        showData(res.data.data[i])
+
+        console.log("data",i,res.data.data[i])
+        
+    }
+
+}
 function showData(obj){
+    
     iid=obj.id
     var li=document.createElement('li');
     li.className='list-group-item';

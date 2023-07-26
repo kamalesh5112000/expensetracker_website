@@ -4,16 +4,25 @@ const User = require('../model/user');
 const sequelize=require('../database/database');
 
 
-exports.getExpense= (req, res, next) => {
+exports.getExpense=async (req, res, next) => {
     const page=+req.query.page;
     console.log("Page Number :",page)
-    
+    let totalexp =await Expense.count({where: {userId:req.user.id}})
     const userdata=req.user.isPremium
-    Expense.findAll({where: {userId:req.user.id}})
+    Expense.findAll({where: {userId:req.user.id},
+    offset:page,
+    limit:2})
     .then(data=>{
         
-        
-      res.json({data,userdata})
+      let pag={
+        datalength:totalexp,
+        currpage:page,
+        hasnextpage:page*2<totalexp,
+        nextpage:page+1,
+        hasprevpage:page>1,
+        prevpage:page-1
+      }  
+      res.json({data,userdata,pag})
 
     }).catch(err=>{
       console.log(err)
