@@ -11,8 +11,17 @@ var leaderbtn=document.getElementById('leaderboard');
 var leaderitems=document.getElementById('leaderitems');
 var showanalysis=document.getElementById('showanalysis')
 var paginationarea=document.getElementById('paginationarea');
+var pagelimitelement=document.getElementById('expensecount');
 
+document.getElementById('changelimit').addEventListener('click',setpagelimit);
 
+function setpagelimit(e){
+    e.preventDefault();
+    
+    console.log(pagelimitelement.value)
+    localStorage.setItem("pagelimit",pagelimitelement.value)
+    display()
+}
 
 document.getElementById('rzp-button1').onclick=async function buyPremium(e){
     e.preventDefault();
@@ -57,9 +66,9 @@ async function submitForm(e){
         catecgory:cat.value
     }
     const token = localStorage.getItem('token');
-    const res = await axios.post('http://localhost:5000/expense',myobj,{headers:{"Authorization":token}});
+    const res = await axios.post('http://localhost:5000/addexpense',myobj,{headers:{"Authorization":token}});
     //const res = await axios.post('http://localhost:5000/expense',myobj)
-    newitem.innerHTML='';
+    
     display();
     if(document.getElementById('leaderboarditems')){
         showLeaderBoardapi();
@@ -72,10 +81,13 @@ async function submitForm(e){
 
 }
 async function display(){
+    newitem.innerHTML='';
     const page =1;
-
+    
     const token = localStorage.getItem('token');
-    const res = await axios.get(`http://localhost:5000/expense?page=${page}`,{headers:{"Authorization":token}});
+    const pagelimit= localStorage.getItem('pagelimit')
+    pagelimitelement.value=pagelimit
+    const res = await axios.post(`http://localhost:5000/expense?page=${page}`,{pagelimit:pagelimit},{headers:{"Authorization":token}});
     console.log(res.data)
     if(res.data.userdata){
         premiumbtn.style.display="none";
@@ -92,13 +104,14 @@ async function display(){
         console.log("No data Present")
         newitem.innerHTML='No data Present';
     }else{
+        showData(res.data.data)
         showpagination(res.data.pag)
-        for(var i=0;i<res.data.data.length;i++){
-            showData(res.data.data[i])
+        // for(var i=0;i<res.data.data.length;i++){
+        //     showData(res.data.data[i])
 
-            console.log("data",i,res.data.data[i])
             
-        }
+            
+        // }
 
     }
 
@@ -118,7 +131,7 @@ function showpagination(obj){
     const curbtn=document.createElement('button');
     curbtn.style.marginRight='5px'
     curbtn.style.backgroundColor='blue'
-    
+
     curbtn.innerHTML=obj.currpage
     curbtn.addEventListener('click',()=>getexpense(obj.currpage))
     paginationarea.appendChild(curbtn)
@@ -133,46 +146,51 @@ function showpagination(obj){
 }
 async function getexpense(page){
     const token = localStorage.getItem('token');
-    const res = await axios.get(`http://localhost:5000/expense?page=${page}`,{headers:{"Authorization":token}});
+    const pagelimit= localStorage.getItem('pagelimit')
+    const res = await axios.post(`http://localhost:5000/expense?page=${page}`,{pagelimit:pagelimit},{headers:{"Authorization":token}});
     showpagination(res.data.pag)
-    newitem.innerHTML=""
-    for(var i=0;i<res.data.data.length;i++){
-        showData(res.data.data[i])
+    showData(res.data.data)
+    // for(var i=0;i<res.data.data.length;i++){
+    //     showData(res.data.data[i])
 
-        console.log("data",i,res.data.data[i])
         
-    }
+    // }
 
 }
 function showData(obj){
-    
-    iid=obj.id
-    var li=document.createElement('li');
-    li.className='list-group-item';
-    li.appendChild(document.createTextNode("Amount: "));
-    li.appendChild(document.createTextNode(obj.amount));
-    li.appendChild(document.createTextNode(" - Descrption :"));
-    li.appendChild(document.createTextNode(obj.description));
-    li.appendChild(document.createTextNode(" - Catecgory :"));
-    li.appendChild(document.createTextNode(obj.catecgory));
-    var id=document.createElement('input')
-    id.setAttribute("type", "hidden");
-    id.appendChild(document.createTextNode(iid))
-    //delete Btn
-    var del=document.createElement('button');
-    del.className='btn btn-danger btn-sm float-right delete';
-    del.appendChild(document.createTextNode('X'));
+    newitem.innerHTML=""
+    for(var i=0;i<obj.length;i++){
+        iid=obj[i].id
+        
+        var li=document.createElement('li');
+        li.className='list-group-item';
+        li.appendChild(document.createTextNode("Amount: "));
+        li.appendChild(document.createTextNode(obj[i].amount));
+        li.appendChild(document.createTextNode(" - Descrption :"));
+        li.appendChild(document.createTextNode(obj[i].description));
+        li.appendChild(document.createTextNode(" - Catecgory :"));
+        li.appendChild(document.createTextNode(obj[i].catecgory));
+        var id=document.createElement('input')
+        id.setAttribute("type", "hidden");
+        id.appendChild(document.createTextNode(iid))
+        //delete Btn
+        var del=document.createElement('button');
+        del.className='btn btn-danger btn-sm float-right delete';
+        del.appendChild(document.createTextNode('X'));
 
-    //Edit btn
-    var edt=document.createElement('button');
-    edt.className='btn btn-warning btn-sm float-right edit';
-    edt.appendChild(document.createTextNode('Edit'))
+        //Edit btn
+        var edt=document.createElement('button');
+        edt.className='btn btn-warning btn-sm float-right edit';
+        edt.appendChild(document.createTextNode('Edit'))
 
+        
+        li.appendChild(edt)
+        li.appendChild(id)
+        li.appendChild(del)
+        newitem.appendChild(li);
+
+    }
     
-    li.appendChild(edt)
-    li.appendChild(id)
-    li.appendChild(del)
-    newitem.appendChild(li);
     // leaderboarditems.appendChild(li)
     
     

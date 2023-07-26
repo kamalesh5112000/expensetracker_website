@@ -6,18 +6,19 @@ const sequelize=require('../database/database');
 
 exports.getExpense=async (req, res, next) => {
     const page=+req.query.page;
-    console.log("Page Number :",page)
+    const pagelimit=req.body.pagelimit;
+    console.log("Page Number :",pagelimit)
     let totalexp =await Expense.count({where: {userId:req.user.id}})
     const userdata=req.user.isPremium
     Expense.findAll({where: {userId:req.user.id},
-    offset:page,
-    limit:2})
+    offset:(page-1)*pagelimit,
+    limit:Number(pagelimit)})
     .then(data=>{
         
       let pag={
         datalength:totalexp,
         currpage:page,
-        hasnextpage:page*2<totalexp,
+        hasnextpage:page*pagelimit<totalexp,
         nextpage:page+1,
         hasprevpage:page>1,
         prevpage:page-1
